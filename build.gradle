@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+uploadArchives{
+    repositories.mavenDeployer{
+        //本地仓库路径
+        repository(url: uri('../repo'))
+        // 唯一标识
+        pom.groupId = "cn.cqs"
+        // 项目名称
+        pom.artifactId = "language"
+        // 版本号
+        pom.version = "1.0.0"
+    }
+}
+/**单独配置外层配置，用于发布jitpack*/
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        //发布私有在线库
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
+}
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 28
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
